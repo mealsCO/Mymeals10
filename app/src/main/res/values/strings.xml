@@ -6,4 +6,10 @@
     <string name="regist">Registrarse</string>
     <string name="login">Ingresar</string>
     <string name="welcome">Bienvenido</string>
+    <string name="nodata">Por favor ingrese los datos restantes</string>
+    <string name="nopass">Las contraseñas no coinciden</string>
+    <string name="registered">Usuario registrado</string>
+    <string name="noreg">Registro Cancelado</string>
+    <string name="logerror">Usuario o contraseña incorrecta</string>
+    <string name="logerror2">Por favor registrese.</string>
 </resources>
