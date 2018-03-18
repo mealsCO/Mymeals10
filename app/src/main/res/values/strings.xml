@@ -3,7 +3,7 @@
     <string name="user">USUARIO</string>
     <string name="pasword">CONTRASEÑA</string>
     <string name="cpasword">CONFIRMAR CONTRASEÑA</string>
-    <string name="regist">Registrar</string>
+    <string name="regist">Registrarse</string>
     <string name="login">Ingresar</string>
     <string name="welcome">Bienvenido</string>
 </resources>

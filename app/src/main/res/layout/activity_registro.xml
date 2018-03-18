@@ -75,7 +75,7 @@
                 android:textColor="@color/black"/>
 
             <EditText
-                android:id="@+id/eCPass"
+                android:id="@+id/eCpass"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -87,9 +87,11 @@
             android:layout_height="0dp"
             android:layout_weight="0.2">
             <Button
+                android:id="@+id/bRegistrarse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/regist"/>
+                android:text="@string/regist"
+                android:onClick="onRegistrarClick"/>
         </LinearLayout>
 
     </LinearLayout>

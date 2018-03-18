@@ -73,9 +73,22 @@
             android:layout_height="0dp"
             android:layout_weight="0.2">
             <Button
-                android:layout_width="match_parent"
+                android:id="@+id/bIngresar"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/login"/>
+                android:text="@string/login"
+                android:onClick="onIngresarClick"/>
+            <TextView
+                android:id="@+id/eRegistrar"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/regist"
+                android:gravity="center"
+                android:textColor="@color/red"
+                android:textSize="25dp"
+                android:onClick="onRegistrarClick"/>
         </LinearLayout>
 
     </LinearLayout>
