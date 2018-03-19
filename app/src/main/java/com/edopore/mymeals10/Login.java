@@ -33,6 +33,9 @@ public class Login extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+
+        user = findViewById(R.id.eUser);
+        pass = findViewById(R.id.ePass);
     }
 
     public void onIngresarClick(View view) {
@@ -48,7 +51,7 @@ public class Login extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.logerror, Toast.LENGTH_SHORT).show();
         }
-        
+
     }
 
     public void onRegistrarClick(View view) {

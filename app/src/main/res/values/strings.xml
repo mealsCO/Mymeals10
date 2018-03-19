@@ -12,4 +12,7 @@
     <string name="noreg">Registro Cancelado</string>
     <string name="logerror">Usuario o contraseña incorrecta</string>
     <string name="logerror2">Por favor registrese.</string>
+    <string name="perfil">Mi Perfil</string>
+    <string name="salir">Cerrar Sesión</string>
+    <string name="ppal">Principal</string>
 </resources>
