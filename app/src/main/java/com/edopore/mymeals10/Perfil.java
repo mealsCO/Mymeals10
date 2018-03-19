@@ -39,12 +39,17 @@ public class Perfil extends AppCompatActivity {
         if (id == R.id.prin){
 
             Intent intent = new Intent(Perfil.this, MainActivity.class);
+            startActivity(intent);
             finish();
 
         }else if (id == R.id.out){
 
             Intent intent = new Intent(Perfil.this, Login.class);
+            startActivity(intent);
+            Intent intent1 = new Intent();
+            setResult(RESULT_OK,intent1);
             finish();
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -3,13 +3,11 @@ package com.edopore.mymeals10;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    TextView text1,text2;
 
     String usuario = "omar";
     double password = 123;
@@ -19,16 +17,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        text1 = findViewById(R.id.eUser);
-        text1 = findViewById(R.id.ePass);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("hola","USER");
-        text1.setText(data.getStringExtra("USER"));
-        text1.setText(data.getStringExtra("PASS"));
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -51,8 +39,18 @@ public class MainActivity extends AppCompatActivity {
         }else if (id == R.id.out){
 
             Intent intent = new Intent(MainActivity.this, Login.class);
+            startActivity(intent);
             finish();
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 369 && resultCode == RESULT_OK){
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
