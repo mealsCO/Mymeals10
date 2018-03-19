@@ -23,7 +23,6 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("juemadre", "Hola");
         if (requestCode == 1234 && resultCode == RESULT_OK) {
             Usuario = data.getStringExtra("USER");
             Password = data.getStringExtra("PASS");
@@ -37,17 +36,19 @@ public class Login extends AppCompatActivity {
     }
 
     public void onIngresarClick(View view) {
-        if ((user.getText().toString().isEmpty() && pass.getText().toString().isEmpty())) {
+        if (Usuario.isEmpty() || Password.isEmpty()) {
             Toast.makeText(this, R.string.logerror2, Toast.LENGTH_SHORT).show();
-        } else {
-            if (Usuario.equals(user.getText().toString()) && Password.equals(pass.getText().toString())) {
-                Intent l = new Intent().setClass(this, MainActivity.class);
-                startActivityForResult(l, 4321);
-                finish();
-            } else {
-                Toast.makeText(this, R.string.logerror, Toast.LENGTH_SHORT).show();
-            }
         }
+        if (Usuario.equals(user.getText().toString()) && Password.equals(pass.getText().toString())) {
+            Intent l = new Intent().setClass(this, MainActivity.class);
+            l.putExtra("USER",Usuario);
+            l.putExtra("PASS",Password);
+            startActivityForResult(l, 4321);
+            finish();
+        } else {
+            Toast.makeText(this, R.string.logerror, Toast.LENGTH_SHORT).show();
+        }
+        
     }
 
     public void onRegistrarClick(View view) {
