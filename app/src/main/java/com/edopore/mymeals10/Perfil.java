@@ -1,8 +1,8 @@
 package com.edopore.mymeals10;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -10,6 +10,7 @@ import android.widget.EditText;
 public class Perfil extends AppCompatActivity {
 
     EditText eUs, ePas;
+    String User, Password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,15 +21,16 @@ public class Perfil extends AppCompatActivity {
         eUs = findViewById(R.id.eUs);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
-            eUs.setText(extras.getString("usuar"));
-            ePas.setText(String.valueOf(extras.getDouble("contrasena")));
-        }
+        User = extras.getString("USER");
+        Password = extras.getString("PASS");
+        eUs.setText(User);
+        ePas.setText(Password);
     }
-//hola loquitos 2
+
+    //hola loquitos 2
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menus,menu);
+        getMenuInflater().inflate(R.menu.menus, menu);
         return true;
     }
 
@@ -36,18 +38,20 @@ public class Perfil extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.prin){
+        if (id == R.id.prin) {
 
-            Intent intent = new Intent(Perfil.this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("USER", User);
+            intent.putExtra("PASS", Password);
             startActivity(intent);
             finish();
 
-        }else if (id == R.id.out){
+        } else if (id == R.id.out) {
 
-            Intent intent = new Intent(Perfil.this, Login.class);
-            startActivity(intent);
+            Intent intent = new Intent(this, Login.class);
             Intent intent1 = new Intent();
-            setResult(RESULT_OK,intent1);
+            startActivity(intent);
+            setResult(RESULT_OK, intent1);
             finish();
 
         }
@@ -56,6 +60,9 @@ public class Perfil extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("USER", User);
+        intent.putExtra("PASS", Password);
         setResult(RESULT_CANCELED);
         finish();
         super.onBackPressed();
