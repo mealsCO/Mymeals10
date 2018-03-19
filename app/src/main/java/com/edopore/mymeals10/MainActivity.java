@@ -8,6 +8,10 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    String usuario = "omar";
+    double password = 123;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.reg){
 
             Intent intent = new Intent(MainActivity.this, Perfil.class);
-            //intent.putExtra("usuario", usuario);
-            //intent.putExtra("contrasena", password);
+            intent.putExtra("usuar", usuario);
+            intent.putExtra("contrasena", password);
             startActivityForResult(intent,369);
 
         }else if (id == R.id.out){

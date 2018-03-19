@@ -21,11 +21,11 @@ public class Perfil extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null){
-            eUs.setText(extras.getChar("usuario"));
-            ePas.setText(extras.getChar("contrasena"));
+            eUs.setText(extras.getString("usuar"));
+            ePas.setText(String.valueOf(extras.getDouble("contrasena")));
         }
     }
-
+//hola loquitos
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menus,menu);
@@ -55,5 +55,5 @@ public class Perfil extends AppCompatActivity {
         finish();
         super.onBackPressed();
     }
-    
+
 }
