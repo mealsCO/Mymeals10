@@ -25,7 +25,7 @@ public class Perfil extends AppCompatActivity {
             ePas.setText(String.valueOf(extras.getDouble("contrasena")));
         }
     }
-//hola loquitos
+//hola loquitos 2
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menus,menu);
