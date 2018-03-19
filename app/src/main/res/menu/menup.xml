@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:title="@string/perfil"
-        android:id="@+id/reg">
+        android:id="@+id/mReg">
 
     </item>
 
     <item
         android:title="@string/salir"
-        android:id="@+id/out">
+        android:id="@+id/mOut">
 
     </item>
 </menu>

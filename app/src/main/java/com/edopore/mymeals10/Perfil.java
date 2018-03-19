@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Perfil extends AppCompatActivity {
 
     EditText eUs, ePas;
+    String us;
+    double co;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +28,6 @@ public class Perfil extends AppCompatActivity {
             ePas.setText(String.valueOf(extras.getDouble("contrasena")));
         }
     }
-//hola loquitos 2
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menus,menu);
@@ -36,18 +38,22 @@ public class Perfil extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.prin){
+        if (id == R.id.mPrin){
 
             Intent intent = new Intent(Perfil.this, MainActivity.class);
-            startActivity(intent);
+            us = eUs.getText().toString();
+            co = Double.parseDouble(ePas.getText().toString());
+            intent.putExtra("usu", us);
+            intent.putExtra("con", co);
+            startActivityForResult(intent,77);
             finish();
 
-        }else if (id == R.id.out){
+
+        }else if (id == R.id.mOuts){
 
             Intent intent = new Intent(Perfil.this, Login.class);
             startActivity(intent);
-            Intent intent1 = new Intent();
-            setResult(RESULT_OK,intent1);
+            setResult(RESULT_OK,intent);
             finish();
 
         }
@@ -56,7 +62,12 @@ public class Perfil extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_CANCELED);
+        Intent intent = new Intent(Perfil.this, MainActivity.class);
+        us = eUs.getText().toString();
+        co = Double.parseDouble(ePas.getText().toString());
+        intent.putExtra("usu", us);
+        intent.putExtra("con", co);
+        startActivityForResult(intent,77);
         finish();
         super.onBackPressed();
     }

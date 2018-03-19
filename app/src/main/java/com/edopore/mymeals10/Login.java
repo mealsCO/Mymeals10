@@ -23,7 +23,6 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("juemadre", "Hola");
         if (requestCode == 1234 && resultCode == RESULT_OK) {
             Usuario = data.getStringExtra("USER");
             Password = data.getStringExtra("PASS");

@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:title="@string/ppal"
-        android:id="@+id/prin">
+        android:id="@+id/mPrin">
 
     </item>
 
     <item
         android:title="@string/salir"
-        android:id="@+id/out">
+        android:id="@+id/mOuts">
 
     </item>
 
