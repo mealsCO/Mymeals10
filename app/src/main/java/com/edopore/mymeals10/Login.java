@@ -37,16 +37,17 @@ public class Login extends AppCompatActivity {
     }
 
     public void onIngresarClick(View view) {
-        if (Usuario.isEmpty() || Password.isEmpty()) {
+        if ((user.getText().toString().isEmpty() && pass.getText().toString().isEmpty())) {
             Toast.makeText(this, R.string.logerror2, Toast.LENGTH_SHORT).show();
-        }
-        if (Usuario.equals(user.getText().toString()) && Password.equals(pass.getText().toString())) {
-            Intent l = new Intent().setClass(this, MainActivity.class);
-            startActivityForResult(l, 4321);
         } else {
-            Toast.makeText(this, R.string.logerror, Toast.LENGTH_SHORT).show();
+            if (Usuario.equals(user.getText().toString()) && Password.equals(pass.getText().toString())) {
+                Intent l = new Intent().setClass(this, MainActivity.class);
+                startActivityForResult(l, 4321);
+                finish();
+            } else {
+                Toast.makeText(this, R.string.logerror, Toast.LENGTH_SHORT).show();
+            }
         }
-        
     }
 
     public void onRegistrarClick(View view) {
