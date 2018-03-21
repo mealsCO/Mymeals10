@@ -40,10 +40,8 @@ public class Perfil extends AppCompatActivity {
         if (id == R.id.mPrin){
 
             Intent intent = new Intent(Perfil.this, MainActivity.class);
-            us = eUs.getText().toString();
-            co = Double.parseDouble(ePas.getText().toString());
-            intent.putExtra("usu", us);
-            intent.putExtra("con", co);
+            intent.putExtra("USER", User);
+            intent.putExtra("PASS", Password);
             startActivityForResult(intent,77);
             finish();
 
@@ -51,7 +49,9 @@ public class Perfil extends AppCompatActivity {
         }else if (id == R.id.mOuts){
 
             Intent intent = new Intent(Perfil.this, Login.class);
-            startActivity(intent);
+            intent.putExtra("us", User);
+            intent.putExtra("co", Password);
+            startActivityForResult(intent,1);
             setResult(RESULT_OK,intent);
             finish();
 
@@ -62,10 +62,8 @@ public class Perfil extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Perfil.this, MainActivity.class);
-        us = eUs.getText().toString();
-        co = Double.parseDouble(ePas.getText().toString());
-        intent.putExtra("usu", us);
-        intent.putExtra("con", co);
+        intent.putExtra("USER", User);
+        intent.putExtra("PASS", Password);
         startActivityForResult(intent,77);
         finish();
         super.onBackPressed();

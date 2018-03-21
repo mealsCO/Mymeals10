@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class Login extends AppCompatActivity {
     EditText user, pass;
-    String Usuario, Password;
+    String Usuario="", Password="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +19,12 @@ public class Login extends AppCompatActivity {
 
         user = findViewById(R.id.eUser);
         pass = findViewById(R.id.ePass);
+
+        Bundle ex = getIntent().getExtras();
+        if (ex != null) {
+            Usuario = ex.getString("us");
+            Password = ex.getString("co");
+        }
     }
 
     @Override
