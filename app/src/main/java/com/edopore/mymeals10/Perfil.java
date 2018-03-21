@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class Perfil extends AppCompatActivity {
 
     EditText eUs, ePas;
-    String us;
-    double co;
+    String User, Password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +21,12 @@ public class Perfil extends AppCompatActivity {
         eUs = findViewById(R.id.eUs);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
-            eUs.setText(extras.getString("usuar"));
-            ePas.setText(String.valueOf(extras.getDouble("contrasena")));
-        }
+        User = extras.getString("USER");
+        Password = extras.getString("PASS");
+        eUs.setText(User);
+        ePas.setText(Password);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menus,menu);

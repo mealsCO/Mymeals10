@@ -23,12 +23,12 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1234 && resultCode == RESULT_OK) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             Usuario = data.getStringExtra("USER");
             Password = data.getStringExtra("PASS");
             user.setText(Usuario);
         } else {
-            if (requestCode == 1234 && resultCode == RESULT_CANCELED) {
+            if (requestCode == 1 && resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, R.string.noreg, Toast.LENGTH_SHORT).show();
             }
         }
@@ -36,12 +36,15 @@ public class Login extends AppCompatActivity {
     }
 
     public void onIngresarClick(View view) {
-        if ((user.getText().toString().isEmpty() && pass.getText().toString().isEmpty())) {
+        if (user.getText().toString().isEmpty() && pass.getText().toString().isEmpty()){
             Toast.makeText(this, R.string.logerror2, Toast.LENGTH_SHORT).show();
         } else {
             if (Usuario.equals(user.getText().toString()) && Password.equals(pass.getText().toString())) {
                 Intent l = new Intent().setClass(this, MainActivity.class);
-                startActivityForResult(l, 4321);
+                l.putExtra("USER",Usuario);
+                l.putExtra("PASS",Password);
+                setResult(RESULT_OK,l);
+                startActivity(l);
                 finish();
             } else {
                 Toast.makeText(this, R.string.logerror, Toast.LENGTH_SHORT).show();
@@ -51,6 +54,6 @@ public class Login extends AppCompatActivity {
 
     public void onRegistrarClick(View view) {
         Intent l = new Intent().setClass(this, Registro.class);
-        startActivityForResult(l, 1234);
+        startActivityForResult(l, 1);
     }
 }
