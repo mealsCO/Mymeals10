@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Mymeals1.0</string>
-    <string name="user">USUARIO</string>
+    <string name="user">CORREO</string>
     <string name="pasword">CONTRASEÑA</string>
     <string name="cpasword">CONFIRMAR CONTRASEÑA</string>
     <string name="regist">Registrarse</string>
@@ -15,4 +15,8 @@
     <string name="perfil">Mi Perfil</string>
     <string name="salir">Cerrar Sesión</string>
     <string name="ppal">Principal</string>
+    <string name="ingresar">O INGRESAR CON:</string>
+
+    <string name="facebook_app_id">1228107957324337</string>
+
 </resources>

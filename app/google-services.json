@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "790938037636",
+    "firebase_url": "https://mymeals-e033d.firebaseio.com",
+    "project_id": "mymeals-e033d",
+    "storage_bucket": "mymeals-e033d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790938037636:android:df67cbce8112d9bd",
+        "android_client_info": {
+          "package_name": "com.edopore.mymeals10"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790938037636-eqmagsm9cjo1u4d9vbf22fkb2c6efnr9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edopore.mymeals10",
+            "certificate_hash": "3cbf43181c33666c3186f62272ffd683ad3897d5"
+          }
+        },
+        {
+          "client_id": "790938037636-feng87ebum2kjss1qupupe903fn2a9n5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edopore.mymeals10",
+            "certificate_hash": "4c802c6aa1321c67c007213b1f06bdcc489a016b"
+          }
+        },
+        {
+          "client_id": "790938037636-7170ljnq87paddf220u7l3jeea14em6q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC17sajUh6Y7rihFI_x0huPsTA4sfB3FTQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790938037636-7170ljnq87paddf220u7l3jeea14em6q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

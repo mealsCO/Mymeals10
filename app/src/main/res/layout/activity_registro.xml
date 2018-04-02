@@ -36,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:inputType="text"/>
+                android:inputType="textEmailAddress"/>
 
         </LinearLayout>
 
@@ -85,14 +85,47 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.2">
+            android:layout_weight="0.2"
+            android:orientation="vertical">
             <Button
                 android:id="@+id/bRegistrarse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/regist"
                 android:onClick="onRegistrarClick"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/ingresar"
+                    android:gravity="center"
+                    android:textColor="@color/black"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <com.google.android.gms.common.SignInButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnSignInGoogle"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <com.facebook.login.widget.LoginButton
+                        android:id="@+id/login_button"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:gravity="center"
+                        android:textSize="23dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
+
 
     </LinearLayout>
 </LinearLayout>
