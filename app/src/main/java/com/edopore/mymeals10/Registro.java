@@ -32,16 +32,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class Registro extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class Registro extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
-    private GoogleApiClient googleApiClient;
 
-    private SignInButton btnSignInGoogle;
-
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
 
     EditText User, Pass, CPass;
     String user, pass, cpass;
@@ -53,82 +48,11 @@ public class Registro extends AppCompatActivity implements GoogleApiClient.OnCon
         User = findViewById(R.id.eUser);
         Pass = findViewById(R.id.ePass);
         CPass = findViewById(R.id.eCpass);
-        btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
-
-        btnSignInGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(i,1);
-            }
-        });
 
         inicializar();
 
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-        //AppEventsLogger.activateApp(this);
-
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Intent i = new Intent(Registro.this, Login.class);
-                setResult(3,i);
-                Toast.makeText(Registro.this,R.string.registered,Toast.LENGTH_SHORT).show();
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-                setResult(RESULT_CANCELED);
-                finish();
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(Registro.this, "error al registrarse face",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
-            GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.
-                    getSignInResultFromIntent(data);
-            signInGoogle(googleSignInResult);
-        }else {
-            callbackManager.onActivityResult(requestCode,resultCode,data);
-        }
-    }
-
-    private void signInGoogle(GoogleSignInResult googleSignInResult) {
-        if (googleSignInResult.isSuccess()){
-            AuthCredential authCredential = GoogleAuthProvider.getCredential(
-                    googleSignInResult.getSignInAccount().getIdToken(),null);
-
-            firebaseAuth.signInWithCredential(authCredential).
-                    addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
-                        Intent i = new Intent(Registro.this, MainActivity.class);
-                        startActivityForResult(i,11);
-                        setResult(RESULT_FIRST_USER,i);
-                        Toast.makeText(Registro.this,R.string.registered,Toast.LENGTH_SHORT).show();
-                        finish();
-                    }else {
-                        Toast.makeText(Registro.this, "error al registrarse",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-    }
 
     private void inicializar() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -138,21 +62,13 @@ public class Registro extends AppCompatActivity implements GoogleApiClient.OnCon
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null){
                     Log.d("FirebaseUser","usuario logueado: "+ firebaseUser.getEmail());
+                    Toast.makeText(Registro.this,"Usuario logueado",Toast.LENGTH_SHORT).show();
                 }else {
                     Log.d("FirebaseUser", "El ususario ha cerrado sesión");
+                    Toast.makeText(Registro.this,"Usuario no logueado",Toast.LENGTH_SHORT).show();
                 }
             }
         };
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.
-                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
-                requestIdToken(getString(R.string.default_web_client_id)).
-                requestEmail().
-                build();
-        googleApiClient = new GoogleApiClient.Builder(this).
-                enableAutoManage(this,this).
-                addApi(Auth.GOOGLE_SIGN_IN_API,gso).
-                build();
     }
 
     public void onBackPressed() {
@@ -196,9 +112,4 @@ public class Registro extends AppCompatActivity implements GoogleApiClient.OnCon
         }
     }
 
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 }
