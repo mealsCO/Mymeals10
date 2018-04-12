@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -17,8 +20,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     String User, Password;
 
@@ -39,6 +47,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void inicializar() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser != null){
+                    User = firebaseUser.getEmail();
+                    Password = firebaseUser.getUid();
+                }else {
+                    goLogin();
+                }
+            }
+        };
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
                 requestIdToken(getString(R.string.default_web_client_id)).
@@ -53,31 +74,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     protected void onStart() {
         super.onStart();
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-        if (opr.isDone()){
-            GoogleSignInResult result = opr.get();
-            resultGoogle (result);
-        }else {
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {  //si no se inicia sesion o
-                    resultGoogle(googleSignInResult);                                   // expira la sesion
-                }
-            });
-        }
+        firebaseAuth.addAuthStateListener(authStateListener);
     }
 
-    private void resultGoogle(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-            GoogleSignInAccount account = result.getSignInAccount();
-            User = account.getEmail();
-            Password = account.getId();
-        }
-//       else {
-//            Intent intent = new Intent(MainActivity.this, Login.class);
-//            startActivityForResult(intent,1);
-//            finish();
-//        }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        firebaseAuth.removeAuthStateListener(authStateListener);
+        googleApiClient.disconnect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        googleApiClient.stopAutoManage(this);
+        googleApiClient.disconnect();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        googleApiClient.connect();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        googleApiClient.stopAutoManage(this);
+        googleApiClient.disconnect();
     }
 
     @Override
@@ -91,30 +115,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         int id = item.getItemId();
 
         if (id == R.id.mReg){
-
-            Intent intent = new Intent(MainActivity.this, Perfil.class);
-            intent.putExtra("USER", User);
-            intent.putExtra("PASS", Password);
-            startActivityForResult(intent,369);
-            finish();
-
+            goPerfil();
         }else if (id == R.id.mOut){
-            Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(@NonNull Status status) {
-                    if (status.isSuccess()) {
-                        Intent intent = new Intent(MainActivity.this, Login.class);
-                        intent.putExtra("us", User);
-                        intent.putExtra("co", Password);
-                        startActivityForResult(intent, 1);
-                        finish();
-                    }else{
-                        Toast.makeText(MainActivity.this, "no se pudo cerrar sesión",Toast.LENGTH_SHORT).show();
+            firebaseAuth.signOut();
+            if (Auth.GoogleSignInApi != null){
+                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        if (status.isSuccess()){
+                            Intent intent = new Intent(MainActivity.this, Login.class);
+                            intent.putExtra("us", User);
+                            startActivityForResult(intent, 1);
+                            finish();
+                            Toast.makeText(MainActivity.this, "El ususario ha cerrado sesión", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(MainActivity.this, "error cerrando sesion con google", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
-
-
+                });
+            }
+            if(LoginManager.getInstance() != null){
+                LoginManager.getInstance().logOut();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,10 +153,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void onBackPressed() {
         Intent intent = new Intent(MainActivity.this, Login.class);
         intent.putExtra("us", User);
-        intent.putExtra("co", Password);
         startActivityForResult(intent,1);
         finish();
         super.onBackPressed();
+    }
+
+    private void goPerfil(){
+        Intent intent = new Intent(MainActivity.this, Perfil.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void goLogin(){
+        Intent intent = new Intent(MainActivity.this, Login.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

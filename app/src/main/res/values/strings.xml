@@ -18,5 +18,6 @@
     <string name="ingresar">O PUEDES INGRESAR CON:</string>
 
     <string name="facebook_app_id">1228107957324337</string>
+    <string name="loginIn">Usuario Logueado</string>
 
 </resources>

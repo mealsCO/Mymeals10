@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -41,6 +43,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
     EditText user, pass;
     String Usuario="", Password="";
+    Boolean reg = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         pass = findViewById(R.id.ePass);
 
         btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
+        loginButton = findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email","public_profile");
+
 
         btnSignInGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,20 +66,13 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             }
         });
 
-        inicializar();
 
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-        //AppEventsLogger.activateApp(this);
 
         callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Intent i = new Intent(Login.this, MainActivity.class);
-                setResult(3,i);
-                Toast.makeText(Login.this,R.string.registered,Toast.LENGTH_SHORT).show();
-                finish();
+                signInFacebook(loginResult.getAccessToken());
             }
 
             @Override
@@ -85,19 +84,36 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(Login.this, "error al registrarse face",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Error al ingresar con Facebook",Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
             }
         });
 
+        inicializar();
 
         Bundle ex = getIntent().getExtras();
         if (ex != null) {
             Usuario = ex.getString("us");
-            Password = ex.getString("co");
         }
     }
 
-//********************************??????????????????????????????*****************************
+    private void signInFacebook(AccessToken accessToken) {
+        AuthCredential authCredential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(this,
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                         if (task.isSuccessful()){
+                             goMainActivity();
+                         }else {
+                             Toast.makeText(Login.this,"Fallo de autenticación con Facebook",
+                                     Toast.LENGTH_SHORT).show();
+                         }
+                    }
+                });
+    }
+
+
     private void inicializar() {
         firebaseAuth = FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener() {
@@ -105,7 +121,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null){
-                    Log.d("FirebaseUser","usuario logueado: "+ firebaseUser.getEmail());
+                    //Log.d("FirebaseUser","usuario logueado: "+ firebaseUser.getEmail());
+                    Toast.makeText(Login.this,R.string.loginIn,Toast.LENGTH_SHORT).show();
                 }else {
                     Log.d("FirebaseUser", "El ususario ha cerrado sesión");
                 }
@@ -123,7 +140,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 addApi(Auth.GOOGLE_SIGN_IN_API,gso).
                 build();
     }
-//***************************????????????????????????????????????????************************
+
 
     private void signInGoogle(GoogleSignInResult googleSignInResult) {
         if (googleSignInResult.isSuccess()){
@@ -135,12 +152,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
-                                Intent i = new Intent(Login.this, MainActivity.class);
-                                startActivityForResult(i,11);
-                                Toast.makeText(Login.this,R.string.registered,Toast.LENGTH_SHORT).show();
-                                finish();
+                                goMainActivity();
                             }else {
-                                Toast.makeText(Login.this, "error al registrarse",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Login.this, "Error al ingresar con Google ",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -151,7 +165,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Usuario = data.getStringExtra("USER");
-            Password = data.getStringExtra("PASS");
+            reg = data.getBooleanExtra("REG",false);
             user.setText(Usuario);
         } else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
                 Toast.makeText(Login.this, R.string.noreg, Toast.LENGTH_SHORT).show();
@@ -174,16 +188,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         if (user.getText().toString().isEmpty() && pass.getText().toString().isEmpty()){
             Toast.makeText(this, R.string.logerror2, Toast.LENGTH_SHORT).show();
         } else {
-            firebaseAuth.signInWithEmailAndPassword(usuario,contra).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            firebaseAuth.signInWithEmailAndPassword(usuario,contra).addOnCompleteListener(this,
+                    new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        Intent l = new Intent().setClass(Login.this, MainActivity.class);
-                        l.putExtra("USER",usuario);
-                        l.putExtra("PASS",contra);
-                        setResult(RESULT_OK,l);
-                        startActivity(l);
-                        finish();
+                        goMainActivity();
                     }else {
                         Toast.makeText(Login.this, R.string.logerror, Toast.LENGTH_SHORT).show();
                     }
@@ -195,6 +205,27 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public void onRegistrarClick(View view) {
         Intent l = new Intent().setClass(this, Registro.class);
         startActivityForResult(l, 1);
+    }
+
+    private void goMainActivity(){
+        Intent i = new Intent(Login.this, MainActivity.class);
+        startActivity(i);
+        if (reg == true){
+            setResult(RESULT_OK,i);
+        }
+        finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        firebaseAuth.removeAuthStateListener(authStateListener);
     }
 
     @Override
