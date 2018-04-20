@@ -123,6 +123,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 if (firebaseUser != null){
                     //Log.d("FirebaseUser","usuario logueado: "+ firebaseUser.getEmail());
                     Toast.makeText(Login.this,R.string.loginIn,Toast.LENGTH_SHORT).show();
+                    goMainActivity();
                 }else {
                     Log.d("FirebaseUser", "El ususario ha cerrado sesión");
                 }

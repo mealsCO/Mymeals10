@@ -96,6 +96,7 @@ public class Registro extends AppCompatActivity {
                                     setResult(RESULT_OK, intent);
                                     Toast.makeText(Registro.this, R.string.registered, Toast.LENGTH_SHORT).show();
                                     finish();
+                                    firebaseAuth.signOut();
                                 }else {
                                     Toast.makeText(Registro.this, "error al crear la cuenta",Toast.LENGTH_SHORT).show();
                                 }
