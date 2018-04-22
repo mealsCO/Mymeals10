@@ -61,9 +61,9 @@ public class Registro extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null){
-                    Log.d("FirebaseUser","usuario logueado: "+ firebaseUser.getEmail());
+
                 }else {
-                    Log.d("FirebaseUser", "El ususario ha cerrado sesión");
+
                 }
             }
         };
@@ -92,7 +92,6 @@ public class Registro extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Intent intent = new Intent();
                                     intent.putExtra("USER", user);
-                                    intent.putExtra("REG",true);
                                     setResult(RESULT_OK, intent);
                                     Toast.makeText(Registro.this, R.string.registered, Toast.LENGTH_SHORT).show();
                                     finish();

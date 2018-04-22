@@ -42,8 +42,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private CallbackManager callbackManager;
 
     EditText user, pass;
-    String Usuario="", Password="";
-    Boolean reg = false;
+    String Usuario="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,11 +120,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null){
-                    //Log.d("FirebaseUser","usuario logueado: "+ firebaseUser.getEmail());
-                    Toast.makeText(Login.this,R.string.loginIn,Toast.LENGTH_SHORT).show();
                     goMainActivity();
-                }else {
-                    Log.d("FirebaseUser", "El ususario ha cerrado sesión");
                 }
             }
         };
@@ -166,7 +161,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Usuario = data.getStringExtra("USER");
-            reg = data.getBooleanExtra("REG",false);
             user.setText(Usuario);
         } else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
                 Toast.makeText(Login.this, R.string.noreg, Toast.LENGTH_SHORT).show();
@@ -211,9 +205,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private void goMainActivity(){
         Intent i = new Intent(Login.this, MainActivity.class);
         startActivity(i);
-        if (reg == true){
-            setResult(RESULT_OK,i);
-        }
         finish();
     }
 
