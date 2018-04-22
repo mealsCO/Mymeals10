@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="@string/ppal"
-        android:id="@+id/mPrin">
+        android:id="@+id/mPrin"
+        android:title="@string/ppal">
 
     </item>
 
     <item
-        android:title="@string/salir"
-        android:id="@+id/mOuts">
+        android:id="@+id/mOuts"
+        android:title="@string/salir">
 
     </item>
 
+    <item
+        android:id="@+id/mShop"
+        android:title="@string/Carrito">
+
+    </item>
 
 </menu>

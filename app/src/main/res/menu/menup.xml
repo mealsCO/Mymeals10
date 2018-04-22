@@ -3,12 +3,15 @@
     <item
         android:title="@string/perfil"
         android:id="@+id/mReg">
-
     </item>
 
     <item
         android:title="@string/salir"
         android:id="@+id/mOut">
+    </item>
 
+    <item
+        android:title="@string/Carrito"
+        android:id="@+id/mShop">
     </item>
 </menu>

@@ -1,6 +1,7 @@
 package com.edopore.mymeals10;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,17 +34,15 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
     String User;
     ImageView iFoto;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        ePas = findViewById(R.id.ePas);
+        ePas = findViewById(R.id.eSal);
         eUs = findViewById(R.id.eUs);
         iFoto = findViewById(R.id.iFoto);
-
 
         inicializar();
     }
@@ -122,7 +121,6 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
             Intent intent = new Intent(Perfil.this, MainActivity.class);
             startActivity(intent);
             finish();
-
 
         }else if (id == R.id.mOuts){
             firebaseAuth.signOut();

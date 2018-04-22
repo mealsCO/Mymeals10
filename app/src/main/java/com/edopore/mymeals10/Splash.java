@@ -1,9 +1,11 @@
 package com.edopore.mymeals10;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import java.util.Timer;
 import java.util.TimerTask;

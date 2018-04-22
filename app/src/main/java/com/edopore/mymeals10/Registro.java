@@ -1,6 +1,7 @@
 package com.edopore.mymeals10;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class Registro extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         User = findViewById(R.id.eUser);
         Pass = findViewById(R.id.ePass);
@@ -92,7 +94,6 @@ public class Registro extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Intent intent = new Intent();
                                     intent.putExtra("USER", user);
-                                    intent.putExtra("REG",true);
                                     setResult(RESULT_OK, intent);
                                     Toast.makeText(Registro.this, R.string.registered, Toast.LENGTH_SHORT).show();
                                     finish();

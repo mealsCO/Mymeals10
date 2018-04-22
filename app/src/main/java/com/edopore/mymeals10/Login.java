@@ -1,6 +1,7 @@
 package com.edopore.mymeals10;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -42,31 +43,28 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private CallbackManager callbackManager;
 
     EditText user, pass;
-    String Usuario="", Password="";
+    String Usuario = "";
     Boolean reg = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         user = findViewById(R.id.eUser);
         pass = findViewById(R.id.ePass);
 
         btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
         loginButton = findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email","public_profile");
-
-
+        loginButton.setReadPermissions("email", "public_profile");
         btnSignInGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(i,12);
+                startActivityForResult(i, 12);
             }
         });
-
-
 
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -84,7 +82,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(Login.this, "Error al ingresar con Facebook",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Error al ingresar con Facebook", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
         });
@@ -103,16 +101,15 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                         if (task.isSuccessful()){
-                             goMainActivity();
-                         }else {
-                             Toast.makeText(Login.this,"Fallo de autenticación con Facebook",
-                                     Toast.LENGTH_SHORT).show();
-                         }
+                        if (task.isSuccessful()) {
+                            goMainActivity();
+                        } else {
+                            Toast.makeText(Login.this, "Fallo de autenticación con Facebook",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
-
 
     private void inicializar() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -120,11 +117,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null){
-                    //Log.d("FirebaseUser","usuario logueado: "+ firebaseUser.getEmail());
-                    Toast.makeText(Login.this,R.string.loginIn,Toast.LENGTH_SHORT).show();
-                    goMainActivity();
-                }else {
+                if (firebaseUser != null) {
+                    Toast.makeText(Login.this, "Bienvenido " + firebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
+                } else {
                     Log.d("FirebaseUser", "El ususario ha cerrado sesión");
                 }
             }
@@ -137,25 +132,25 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 requestEmail().
                 build();
         googleApiClient = new GoogleApiClient.Builder(this).
-                enableAutoManage(this,this).
-                addApi(Auth.GOOGLE_SIGN_IN_API,gso).
+                enableAutoManage(this, this).
+                addApi(Auth.GOOGLE_SIGN_IN_API, gso).
                 build();
     }
 
 
     private void signInGoogle(GoogleSignInResult googleSignInResult) {
-        if (googleSignInResult.isSuccess()){
+        if (googleSignInResult.isSuccess()) {
             AuthCredential authCredential = GoogleAuthProvider.getCredential(
-                    googleSignInResult.getSignInAccount().getIdToken(),null);
+                    googleSignInResult.getSignInAccount().getIdToken(), null);
 
             firebaseAuth.signInWithCredential(authCredential).
                     addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 goMainActivity();
-                            }else {
-                                Toast.makeText(Login.this, "Error al ingresar con Google ",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(Login.this, "Error al ingresar con Google ", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -166,11 +161,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Usuario = data.getStringExtra("USER");
-            reg = data.getBooleanExtra("REG",false);
+            reg = data.getBooleanExtra("REG", false);
             user.setText(Usuario);
         } else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-                Toast.makeText(Login.this, R.string.noreg, Toast.LENGTH_SHORT).show();
-        }else {
+            Toast.makeText(Login.this, R.string.noreg, Toast.LENGTH_SHORT).show();
+        } else {
             if (requestCode == 12) {
                 GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.
                         getSignInResultFromIntent(data);
@@ -186,20 +181,20 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         final String usuario = user.getText().toString();
         final String contra = pass.getText().toString();
 
-        if (user.getText().toString().isEmpty() && pass.getText().toString().isEmpty()){
+        if (user.getText().toString().isEmpty() && pass.getText().toString().isEmpty()) {
             Toast.makeText(this, R.string.logerror2, Toast.LENGTH_SHORT).show();
         } else {
-            firebaseAuth.signInWithEmailAndPassword(usuario,contra).addOnCompleteListener(this,
+            firebaseAuth.signInWithEmailAndPassword(usuario, contra).addOnCompleteListener(this,
                     new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
-                        goMainActivity();
-                    }else {
-                        Toast.makeText(Login.this, R.string.logerror, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                goMainActivity();
+                            } else {
+                                Toast.makeText(Login.this, R.string.logerror, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
     }
 
@@ -208,12 +203,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         startActivityForResult(l, 1);
     }
 
-    private void goMainActivity(){
+    private void goMainActivity() {
         Intent i = new Intent(Login.this, MainActivity.class);
         startActivity(i);
-        if (reg == true){
-            setResult(RESULT_OK,i);
-        }
         finish();
     }
 
