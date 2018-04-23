@@ -2,10 +2,11 @@ package com.edopore.mymeals10.modelo;
 
 public class Restaurantes {
 
-    String nombre, foto, direccion, id, telefono, calificacion;
+    private String nombre, foto, direccion, id, telefono;
+    private int calificacion;
 
 
-    public Restaurantes(String nombre, String foto, String direccion, String id, String telefono, String calificacion) {
+    public Restaurantes(String nombre, String foto, String direccion, String id, String telefono, int calificacion) {
         this.nombre = nombre;
         this.foto = foto;
         this.direccion = direccion;
@@ -57,11 +58,11 @@ public class Restaurantes {
         this.telefono = telefono;
     }
 
-    public String getCalificacion() {
+    public int getCalificacion() {
         return calificacion;
     }
 
-    public void setCalificacion(String calificacion) {
+    public void setCalificacion(int calificacion) {
         this.calificacion = calificacion;
     }
 }

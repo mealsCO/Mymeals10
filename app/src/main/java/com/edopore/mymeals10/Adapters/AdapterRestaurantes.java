@@ -78,7 +78,7 @@ public class AdapterRestaurantes extends RecyclerView.Adapter<AdapterRestaurante
             tNombre.setText(restaurante.getNombre());
             tDireccion.setText(restaurante.getDireccion());
             tTelefono.setText(restaurante.getTelefono());
-            tCalificacion.setText(restaurante.getCalificacion());
+            tCalificacion.setText(String.valueOf(restaurante.getCalificacion()));
             Picasso.get().load(restaurante.getFoto()).into(iFoto);
         }
     }
