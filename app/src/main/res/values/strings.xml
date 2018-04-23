@@ -24,5 +24,8 @@
     <string name="tel">Teléfono</string>
     <string name="saldo">Saldo</string>
     <string name="fecha">Fecha de nacimiento</string>
+    <string name="editar">Editar Perfil</string>
+    <string name="save">Guardar Cambios</string>
+    <string name="cancelar">Cancelar</string>
 
 </resources>

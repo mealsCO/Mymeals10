@@ -31,15 +31,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Objects;
+
 public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private GoogleApiClient googleApiClient;
 
-    private SignInButton btnSignInGoogle;
-
-    private LoginButton loginButton;
     private CallbackManager callbackManager;
 
     EditText user, pass;
@@ -55,8 +54,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         user = findViewById(R.id.eUser);
         pass = findViewById(R.id.ePass);
 
-        btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
-        loginButton = findViewById(R.id.login_button);
+        SignInButton btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
+        LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile");
         btnSignInGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +76,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             public void onCancel() {
                 setResult(RESULT_CANCELED);
                 finish();
-
             }
 
             @Override
@@ -118,13 +116,16 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
-                    Toast.makeText(Login.this, "Bienvenido " + firebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    if (firebaseUser.getDisplayName() == null) {
+                        Toast.makeText(Login.this, "Bienvenido ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(Login.this, "Bienvenido " + firebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Log.d("FirebaseUser", "El ususario ha cerrado sesión");
                 }
             }
         };
-
 
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
@@ -141,7 +142,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private void signInGoogle(GoogleSignInResult googleSignInResult) {
         if (googleSignInResult.isSuccess()) {
             AuthCredential authCredential = GoogleAuthProvider.getCredential(
-                    googleSignInResult.getSignInAccount().getIdToken(), null);
+                    Objects.requireNonNull(googleSignInResult.getSignInAccount()).getIdToken(), null);
 
             firebaseAuth.signInWithCredential(authCredential).
                     addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -219,6 +220,33 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     protected void onStop() {
         super.onStop();
         firebaseAuth.removeAuthStateListener(authStateListener);
+        googleApiClient.disconnect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        googleApiClient.stopAutoManage(this);
+        googleApiClient.disconnect();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        googleApiClient.stopAutoManage(this);
+        googleApiClient.disconnect();
     }
 
     @Override

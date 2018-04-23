@@ -2,17 +2,17 @@ package com.edopore.mymeals10;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -30,8 +30,8 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
     private FirebaseAuth.AuthStateListener authStateListener;
     private GoogleApiClient googleApiClient;
 
-    EditText eUs, ePas;
-    String User;
+    EditText eUs, ePas, eNam, eTel;//ePas es para saldo, eUs es para correo
+    Button bEdit, bSave, bCancel;
     ImageView iFoto;
 
     @Override
@@ -42,7 +42,16 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
 
         ePas = findViewById(R.id.eSal);
         eUs = findViewById(R.id.eUs);
+        eNam = findViewById(R.id.eNa);
+        eTel = findViewById(R.id.eTel);
         iFoto = findViewById(R.id.iFoto);
+
+        bEdit = findViewById(R.id.bEdit);
+        bSave = findViewById(R.id.bSave);
+        bSave.setVisibility(View.GONE);
+        bCancel = findViewById(R.id.bCancel);
+        bCancel.setVisibility(View.GONE);
+
 
         inicializar();
     }
@@ -53,12 +62,14 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null){
+                if (firebaseUser != null) {
                     eUs.setText(firebaseUser.getEmail());
                     ePas.setText(firebaseUser.getUid());
-                    Picasso.get().load(firebaseUser.getPhotoUrl()).into(iFoto);
-                }else {
-                    goLogin();
+                    eTel.setText(firebaseUser.getPhoneNumber());
+                    eNam.setText(firebaseUser.getDisplayName());
+                    if (firebaseUser.getPhotoUrl() != null) {
+                        Picasso.get().load(firebaseUser.getPhotoUrl()).into(iFoto);
+                    }
                 }
             }
         };
@@ -68,8 +79,8 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
                 requestEmail().
                 build();
         googleApiClient = new GoogleApiClient.Builder(this).
-                enableAutoManage(this,this).
-                addApi(Auth.GOOGLE_SIGN_IN_API,gso).
+                enableAutoManage(this, this).
+                addApi(Auth.GOOGLE_SIGN_IN_API, gso).
                 build();
     }
 
@@ -100,6 +111,12 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        goMainActivity();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         googleApiClient.stopAutoManage(this);
@@ -108,7 +125,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menus,menu);
+        getMenuInflater().inflate(R.menu.menus, menu);
         return true;
     }
 
@@ -116,58 +133,79 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.mPrin){
-
+        if (id == R.id.mPrin) {
             Intent intent = new Intent(Perfil.this, MainActivity.class);
             startActivity(intent);
             finish();
-
-        }else if (id == R.id.mOuts){
+        }
+        if (id == R.id.mOuts) {
             firebaseAuth.signOut();
-            if (Auth.GoogleSignInApi != null){
+            if (Auth.GoogleSignInApi != null) {
                 Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
-                        if (status.isSuccess()){
-                            Intent intent = new Intent(Perfil.this, Login.class);
-                            intent.putExtra("us", User);
-                            startActivityForResult(intent, 1);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                            Toast.makeText(Perfil.this, "El ususario ha cerrado sesión", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(Perfil.this, "error cerrando sesion con google", Toast.LENGTH_SHORT).show();
+                        if (status.isSuccess()) {
+                            goLogin();
+                            Toast.makeText(Perfil.this, "Has cerrado la sesión", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(Perfil.this, "Error cerrando sesión con google", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-            if (LoginManager.getInstance() != null){
+            if (LoginManager.getInstance() != null) {
                 LoginManager.getInstance().logOut();
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void goLogin(){
+    private void goLogin() {
         Intent intent = new Intent(Perfil.this, Login.class);
         startActivity(intent);
         finish();
     }
 
-    private void goMainActivity(){
+    private void goMainActivity() {
         Intent intent = new Intent(Perfil.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        goMainActivity();
-    }
-
-    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public void OnEditarClick(View view) {
+        eUs.setEnabled(true);
+        eNam.setEnabled(true);
+        eTel.setEnabled(true);
+        iFoto.isClickable();
+        bEdit.setVisibility(View.GONE);
+        bCancel.setVisibility(View.VISIBLE);
+        bSave.setVisibility(View.VISIBLE);
+    }
+
+    public void OnSaveClicked(View view) {
+        ePas.setEnabled(false);
+        eUs.setEnabled(false);
+        eNam.setEnabled(false);
+        eTel.setEnabled(false);
+        iFoto.isClickable();
+        bEdit.setVisibility(View.VISIBLE);
+        bCancel.setVisibility(View.GONE);
+        bSave.setVisibility(View.GONE);
+    }
+
+    public void OnCancelClicked(View view) {
+        ePas.setEnabled(false);
+        eUs.setEnabled(false);
+        eNam.setEnabled(false);
+        eTel.setEnabled(false);
+        iFoto.isClickable();
+        bEdit.setVisibility(View.VISIBLE);
+        bCancel.setVisibility(View.GONE);
+        bSave.setVisibility(View.GONE);
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="15dp"
     tools:context="com.edopore.mymeals10.Perfil">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,8 +48,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:focusable="false"
-            android:textIsSelectable="false" />
+            android:enabled="false"
+            android:inputType="text" />
 
     </LinearLayout>
 
@@ -70,8 +70,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:focusable="false"
-            android:textIsSelectable="false" />
+            android:enabled="false"
+            android:inputType="textEmailAddress" />
 
     </LinearLayout>
 
@@ -93,32 +93,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:focusable="false"
-            android:textIsSelectable="false" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:text="@string/fecha"
-            android:textAllCaps="true"
-            android:textSize="12dp"/>
-
-        <EditText
-            android:id="@+id/eFecha"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:focusable="false"
-            android:textIsSelectable="false" />
+            android:enabled="false"
+            android:inputType="phone" />
 
     </LinearLayout>
 
@@ -140,7 +116,44 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:focusable="false"
-            android:textIsSelectable="false" />
+            android:enabled="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="OnEditarClick"
+            android:text="@string/editar"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bSave"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="OnSaveClicked"
+            android:text="@string/save"
+            android:textAllCaps="true" />
+
+        <Button
+            android:id="@+id/bCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="OnCancelClicked"
+            android:text="@string/cancelar" />
     </LinearLayout>
 </LinearLayout>
