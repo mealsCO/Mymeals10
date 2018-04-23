@@ -29,8 +29,13 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -41,7 +46,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
-    EditText user, pass;
+    EditText user, pass, eVal;
     String Usuario="";
 
     @Override
@@ -51,6 +56,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
         user = findViewById(R.id.eUser);
         pass = findViewById(R.id.ePass);
+        eVal = findViewById(R.id.eVal);
 
         btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
         loginButton = findViewById(R.id.login_button);
@@ -203,7 +209,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     }
 
     private void goMainActivity(){
-        Intent i = new Intent(Login.this, MainActivity.class);
+        Intent i = new Intent(Login.this, RestaurantesActivity.class);
         startActivity(i);
         finish();
     }
@@ -223,5 +229,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public void enviar1(View view) {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Restaurantes");
+        databaseReference.setValue(eVal.getText().toString());
     }
 }
