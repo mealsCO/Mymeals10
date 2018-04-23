@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
@@ -19,6 +22,11 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -27,14 +35,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     String User, Password;
 
-    private GoogleApiClient googleApiClient;
+    EditText text,text2;
 
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        text = findViewById(R.id.eTexto);
 
         inicializar();
     }
@@ -144,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void goLogin() {
-        Log.d("tag","tekkentag");
+        Log.d("tag", "tekkentag");
         Intent intent = new Intent(MainActivity.this, Login.class);
         startActivity(intent);
         finish();
@@ -152,6 +163,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    public void OnEnviarClicked(View view) {
+        String texto = text.getText().toString();
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("OtraTabla");
+
+        databaseReference.setValue(texto);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue().toString();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("tag", "Failed to read value.", databaseError.toException());
+            }
+        });
 
     }
 }

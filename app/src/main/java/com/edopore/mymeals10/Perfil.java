@@ -160,10 +160,10 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         return super.onOptionsItemSelected(item);
     }
 
-    private void goLogin() {
-        Intent intent = new Intent(Perfil.this, Login.class);
+    private void goLogin() {Intent intent = new Intent(Perfil.this, Login.class);
         startActivity(intent);
         finish();
+
     }
 
     private void goMainActivity() {
