@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "790938037636-ke8jb6dbjjif6thelo6ec6aklmr766rg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edopore.mymeals10",
+            "certificate_hash": "fda0ec3474a6b7e07cccc15676abd91b9b5456fd"
+          }
+        },
+        {
           "client_id": "790938037636-eqmagsm9cjo1u4d9vbf22fkb2c6efnr9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

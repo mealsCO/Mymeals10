@@ -27,5 +27,12 @@
     <string name="editar">Editar Perfil</string>
     <string name="save">Guardar Cambios</string>
     <string name="cancelar">Cancelar</string>
+    <string name="restaurante">Restaurante</string>
+    <string name="direccion">Direccion</string>
+    <string name="telefono">Telefono</string>
+    <string name="calificacion">Calificación</string>
+    <string name="title_activity_restaurantes">RestaurantesActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>

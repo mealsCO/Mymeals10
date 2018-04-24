@@ -63,9 +63,9 @@ public class Registro extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null){
-                    Log.d("FirebaseUser","usuario logueado: "+ firebaseUser.getEmail());
+
                 }else {
-                    Log.d("FirebaseUser", "El ususario ha cerrado sesión");
+
                 }
             }
         };

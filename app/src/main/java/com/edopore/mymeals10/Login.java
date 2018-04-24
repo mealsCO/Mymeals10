@@ -30,20 +30,27 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
 public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private GoogleApiClient googleApiClient;
 
+    private SignInButton btnSignInGoogle;
+
+    private LoginButton loginButton;
     private CallbackManager callbackManager;
 
-    EditText user, pass;
-    String Usuario = "";
-    Boolean reg = false;
+    EditText user, pass, eVal;
+    String Usuario="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
         user = findViewById(R.id.eUser);
         pass = findViewById(R.id.ePass);
+        eVal = findViewById(R.id.eVal);
 
         SignInButton btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
         LoginButton loginButton = findViewById(R.id.login_button);
@@ -61,7 +69,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             @Override
             public void onClick(View view) {
                 Intent i = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(i, 12);
+                startActivityForResult(i,12);
             }
         });
 
@@ -80,7 +88,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(Login.this, "Error al ingresar con Facebook", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Error al ingresar con Facebook",Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
         });
@@ -99,12 +107,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            goMainActivity();
-                        } else {
-                            Toast.makeText(Login.this, "Fallo de autenticación con Facebook",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                         if (task.isSuccessful()){
+                             goMainActivity();
+                         }else {
+                             Toast.makeText(Login.this,"Fallo de autenticación con Facebook",
+                                     Toast.LENGTH_SHORT).show();
+                         }
                     }
                 });
     }
@@ -133,25 +141,25 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 requestEmail().
                 build();
         googleApiClient = new GoogleApiClient.Builder(this).
-                enableAutoManage(this, this).
-                addApi(Auth.GOOGLE_SIGN_IN_API, gso).
+                enableAutoManage(this,this).
+                addApi(Auth.GOOGLE_SIGN_IN_API,gso).
                 build();
     }
 
 
     private void signInGoogle(GoogleSignInResult googleSignInResult) {
-        if (googleSignInResult.isSuccess()) {
+        if (googleSignInResult.isSuccess()){
             AuthCredential authCredential = GoogleAuthProvider.getCredential(
-                    Objects.requireNonNull(googleSignInResult.getSignInAccount()).getIdToken(), null);
+                    googleSignInResult.getSignInAccount().getIdToken(),null);
 
             firebaseAuth.signInWithCredential(authCredential).
                     addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
+                            if (task.isSuccessful()){
                                 goMainActivity();
-                            } else {
-                                Toast.makeText(Login.this, "Error al ingresar con Google ", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(Login.this, "Error al ingresar con Google ",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -165,8 +173,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             reg = data.getBooleanExtra("REG", false);
             user.setText(Usuario);
         } else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-            Toast.makeText(Login.this, R.string.noreg, Toast.LENGTH_SHORT).show();
-        } else {
+                Toast.makeText(Login.this, R.string.noreg, Toast.LENGTH_SHORT).show();
+        }else {
             if (requestCode == 12) {
                 GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.
                         getSignInResultFromIntent(data);
@@ -182,20 +190,20 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         final String usuario = user.getText().toString();
         final String contra = pass.getText().toString();
 
-        if (user.getText().toString().isEmpty() && pass.getText().toString().isEmpty()) {
+        if (user.getText().toString().isEmpty() && pass.getText().toString().isEmpty()){
             Toast.makeText(this, R.string.logerror2, Toast.LENGTH_SHORT).show();
         } else {
-            firebaseAuth.signInWithEmailAndPassword(usuario, contra).addOnCompleteListener(this,
+            firebaseAuth.signInWithEmailAndPassword(usuario,contra).addOnCompleteListener(this,
                     new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                goMainActivity();
-                            } else {
-                                Toast.makeText(Login.this, R.string.logerror, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()){
+                        goMainActivity();
+                    }else {
+                        Toast.makeText(Login.this, R.string.logerror, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
@@ -204,7 +212,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         startActivityForResult(l, 1);
     }
 
-    private void goMainActivity() {
+    private void goMainActivity(){
         Intent i = new Intent(Login.this, MainActivity.class);
         startActivity(i);
         finish();
@@ -252,5 +260,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public void enviar1(View view) {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Restaurantes");
+        databaseReference.setValue(eVal.getText().toString());
     }
 }
