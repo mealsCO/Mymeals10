@@ -210,7 +210,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     }
 
     private void goMainActivity() {
-        Intent i = new Intent(Login.this, RestaurantesActivity.class);
+        Intent i = new Intent(Login.this, MainActivity.class);
         startActivity(i);
         finish();
     }
