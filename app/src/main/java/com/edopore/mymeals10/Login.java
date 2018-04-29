@@ -47,7 +47,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
-    EditText user, pass, eVal;
+    EditText user, pass;
     String Usuario = "";
 
     @Override
@@ -58,7 +58,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
         user = findViewById(R.id.eUser);
         pass = findViewById(R.id.ePass);
-        eVal = findViewById(R.id.eVal);
 
         SignInButton btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
         LoginButton loginButton = findViewById(R.id.login_button);
@@ -211,7 +210,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     }
 
     private void goMainActivity() {
-        Intent i = new Intent(Login.this, MainActivity.class);
+        Intent i = new Intent(Login.this, RestaurantesActivity.class);
         startActivity(i);
         finish();
     }
@@ -260,9 +259,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
     }
 
-    public void enviar1(View view) {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Restaurantes");
-        databaseReference.setValue(eVal.getText().toString());
-    }
+//    public void enviar1(View view) {
+//        firebaseDatabase = FirebaseDatabase.getInstance();
+//        databaseReference = firebaseDatabase.getReference("Restaurantes");
+//        databaseReference.setValue(eVal.getText().toString());
+//    }
 }
