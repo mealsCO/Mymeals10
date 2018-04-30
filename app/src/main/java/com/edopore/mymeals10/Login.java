@@ -226,6 +226,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             Usuarios usuarios = new Usuarios(firebaseUser.getUid(),
                                     firebaseUser.getDisplayName(),
                                     firebaseUser.getPhoneNumber(),
+                                    "0",
                                     firebaseUser.getEmail(),
                                     10000);
 

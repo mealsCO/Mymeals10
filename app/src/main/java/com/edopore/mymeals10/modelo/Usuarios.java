@@ -1,18 +1,10 @@
 package com.edopore.mymeals10.modelo;
 
-import android.net.Uri;
 
 public class Usuarios {
     private String id, nombre, telefono, foto, correo;
     private int saldo;
 
-    public Usuarios(String id, String nombre, String telefono, String correo, int saldo) {
-        this.id = id;
-        this.nombre = nombre;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.saldo = saldo;
-    }
 
     public Usuarios(String id, String nombre, String telefono, String foto, String correo, int saldo) {
         this.id = id;
@@ -22,7 +14,6 @@ public class Usuarios {
         this.correo = correo;
         this.saldo = saldo;
     }
-
 
     public Usuarios() {
     }

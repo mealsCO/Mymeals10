@@ -32,7 +32,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -78,6 +82,9 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
 
 
         inicializar();
+
+        FirebaseDatabase.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     private void inicializar() {
@@ -87,13 +94,39 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
-                    eUs.setText(firebaseUser.getEmail());
+                    if (firebaseUser.getPhotoUrl() != null) {
+                        Picasso.get().load(firebaseUser.getPhotoUrl()).into(iFoto);
+                    }
+                    databaseReference.child("usuarios").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()){
+                                for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                                    Usuarios usuarios = snapshot.getValue(Usuarios.class);
+                                    eUs.setText(usuarios.getCorreo());
+                                    ePas.setText(String.valueOf(usuarios.getSaldo()));
+                                    eTel.setText(usuarios.getTelefono());
+                                    eNam.setText(usuarios.getNombre());
+                                    Picasso.get().load(usuarios.getFoto()).into(iFoto);
+                                }
+                            }
+                            //listAdapter.notifyDataSetChanged();
+                            //usuarioAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                   /* eUs.setText(firebaseUser.getEmail());
                     ePas.setText("20000");
                     eTel.setText(firebaseUser.getPhoneNumber());
                     eNam.setText(firebaseUser.getDisplayName());
                     if (firebaseUser.getPhotoUrl() != null) {
                         Picasso.get().load(firebaseUser.getPhotoUrl()).into(iFoto);
-                    }
+                    }*/
                 }
             }
         };
@@ -206,7 +239,6 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         eUs.setEnabled(true);
         eNam.setEnabled(true);
         eTel.setEnabled(true);
-        iFoto.isClickable();
         bEdit.setVisibility(View.GONE);
         bCancel.setVisibility(View.VISIBLE);
         bSave.setVisibility(View.VISIBLE);
@@ -217,10 +249,15 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         eUs.setEnabled(false);
         eNam.setEnabled(false);
         eTel.setEnabled(false);
-        iFoto.isClickable();
         bEdit.setVisibility(View.VISIBLE);
         bCancel.setVisibility(View.GONE);
         bSave.setVisibility(View.GONE);
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        FirebaseDatabase.getInstance(); // para que actualice la informacion cuando se conecte a internet
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(); // parado en la base de datos
 
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReference = firebaseStorage.getReference();
@@ -229,7 +266,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        storageReference.child("Fotosusuarios").child(databaseReference.push().getKey())
+        storageReference.child("Fotosusuarios").child(firebaseUser.getUid())
                 .putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -242,12 +279,12 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
             }
         });
 
-        Usuarios usuarios = new Usuarios(databaseReference.push().getKey(),
+        Usuarios usuarios = new Usuarios(firebaseUser.getUid(),
                 eNam.getText().toString(),
                 eTel.getText().toString(),
-                eUs.getText().toString(),
                 urlFoto,
-                Integer.valueOf(ePas.getText().toString()));
+                eUs.getText().toString(),
+                10000);
 
         databaseReference.child("usuarios").child(usuarios.getId()).setValue(usuarios).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -296,7 +333,6 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         eUs.setEnabled(false);
         eNam.setEnabled(false);
         eTel.setEnabled(false);
-        iFoto.isClickable();
         bEdit.setVisibility(View.VISIBLE);
         bCancel.setVisibility(View.GONE);
         bSave.setVisibility(View.GONE);
