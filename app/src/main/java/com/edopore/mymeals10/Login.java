@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.edopore.mymeals10.modelo.Usuarios;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -30,8 +31,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -204,12 +208,46 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         }
     }
 
-    public void onRegistrarClick(View view) {
+    private void createCuenta() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        FirebaseDatabase.getInstance(); // para que actualice la informacion cuando se conecte a internet
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(); // estoy aqui fir-2c7fa
+
+        databaseReference.child("usuarios").child(firebaseUser.getUid()).
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Log.d("usuario", "ok");
+                        } else {
+                            Log.d("usuario", "NO");
+                            Usuarios usuarios = new Usuarios(firebaseUser.getUid(),
+                                    firebaseUser.getDisplayName(),
+                                    firebaseUser.getPhoneNumber(),
+                                    firebaseUser.getEmail(),
+                                    10000);
+
+                            databaseReference.child("usuarios").child(usuarios.getId()).setValue(usuarios);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+        public void onRegistrarClick(View view) {
         Intent l = new Intent().setClass(this, Registro.class);
         startActivityForResult(l, 1);
     }
 
     private void goMainActivity() {
+        createCuenta();
         Intent i = new Intent(Login.this, MainActivity.class);
         startActivity(i);
         finish();
@@ -259,9 +297,4 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
     }
 
-//    public void enviar1(View view) {
-//        firebaseDatabase = FirebaseDatabase.getInstance();
-//        databaseReference = firebaseDatabase.getReference("Restaurantes");
-//        databaseReference.setValue(eVal.getText().toString());
-//    }
 }

@@ -7,9 +7,9 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="3dp"
     app:cardCornerRadius="4dp"
-    android:layout_margin="2dp"
+    android:padding="3dp"
+    android:layout_margin="4dp"
     android:id="@+id/restaurantesCardView">
 
     <LinearLayout

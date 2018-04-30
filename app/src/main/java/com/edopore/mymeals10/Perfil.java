@@ -2,9 +2,14 @@ package com.edopore.mymeals10;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.edopore.mymeals10.modelo.Usuarios;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -20,15 +26,33 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private GoogleApiClient googleApiClient;
+
+    private DatabaseReference databaseReference;
+
+    private Bitmap bitmap;
+    private String urlFoto;
 
     EditText eUs, ePas, eNam, eTel;//ePas es para saldo, eUs es para correo
     Button bEdit, bSave, bCancel;
@@ -64,7 +88,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     eUs.setText(firebaseUser.getEmail());
-                    ePas.setText(firebaseUser.getUid());
+                    ePas.setText("20000");
                     eTel.setText(firebaseUser.getPhoneNumber());
                     eNam.setText(firebaseUser.getDisplayName());
                     if (firebaseUser.getPhotoUrl() != null) {
@@ -160,7 +184,8 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         return super.onOptionsItemSelected(item);
     }
 
-    private void goLogin() {Intent intent = new Intent(Perfil.this, Login.class);
+    private void goLogin() {
+        Intent intent = new Intent(Perfil.this, Login.class);
         startActivity(intent);
         finish();
 
@@ -196,6 +221,74 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         bEdit.setVisibility(View.VISIBLE);
         bCancel.setVisibility(View.GONE);
         bSave.setVisibility(View.GONE);
+
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(); // comprimir foto
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        storageReference.child("Fotosusuarios").child(databaseReference.push().getKey())
+                .putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                urlFoto = taskSnapshot.getDownloadUrl().toString();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("error", e.getMessage().toString());
+            }
+        });
+
+        Usuarios usuarios = new Usuarios(databaseReference.push().getKey(),
+                eNam.getText().toString(),
+                eTel.getText().toString(),
+                eUs.getText().toString(),
+                urlFoto,
+                Integer.valueOf(ePas.getText().toString()));
+
+        databaseReference.child("usuarios").child(usuarios.getId()).setValue(usuarios).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d("entre1", "ok");
+                } else {
+                    Log.d("entre2", "ok");
+                    Log.d("save", task.getException().toString());
+                }
+            }
+        });
+        Toast.makeText(Perfil.this, "almacenar", Toast.LENGTH_SHORT).show();
+    }
+
+    public void fotoClicked(View view){
+        Intent fotoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        fotoIntent.setType("image/*");
+        startActivityForResult(fotoIntent,1234);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1234 && resultCode == RESULT_OK){
+            if (data == null){
+                Toast.makeText(this, "ERROR CARGANDO FOTO", Toast.LENGTH_SHORT).show();
+            }else {
+                Uri imagen = data.getData();
+
+                try {
+                    InputStream is = getContentResolver().openInputStream(imagen);
+                    BufferedInputStream bis = new BufferedInputStream(is);
+                    bitmap = BitmapFactory.decodeStream(bis);
+
+                    iFoto.setImageBitmap(bitmap);
+                }catch (FileNotFoundException e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void OnCancelClicked(View view) {

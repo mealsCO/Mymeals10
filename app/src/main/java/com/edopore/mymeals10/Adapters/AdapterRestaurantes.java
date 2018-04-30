@@ -53,6 +53,7 @@ public class AdapterRestaurantes extends RecyclerView.Adapter<AdapterRestaurante
         Restaurantes restaurante = restaurantesList.get(position);
         holder.bindRestaurante(restaurante, activity);
 
+
     }
 
     @Override
