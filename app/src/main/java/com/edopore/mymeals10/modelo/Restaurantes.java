@@ -3,15 +3,17 @@ package com.edopore.mymeals10.modelo;
 public class Restaurantes {
 
     private String nombre, foto, direccion, id, telefono;
-    private int calificacion;
+    private float calificacion, latitud, longitud;
 
-    public Restaurantes(String nombre, String foto, String direccion, String id, String telefono, int calificacion) {
+    public Restaurantes(String nombre, String foto, String direccion, String id, String telefono, float calificacion, float latitud, float longitud) {
         this.nombre = nombre;
         this.foto = foto;
         this.direccion = direccion;
         this.id = id;
         this.telefono = telefono;
         this.calificacion = calificacion;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public Restaurantes() {
@@ -57,11 +59,27 @@ public class Restaurantes {
         this.telefono = telefono;
     }
 
-    public int getCalificacion() {
+    public float getCalificacion() {
         return calificacion;
     }
 
-    public void setCalificacion(int calificacion) {
+    public void setCalificacion(float calificacion) {
         this.calificacion = calificacion;
+    }
+
+    public float getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(float latitud) {
+        this.latitud = latitud;
+    }
+
+    public float getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(float longitud) {
+        this.longitud = longitud;
     }
 }

@@ -46,6 +46,8 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -80,38 +82,53 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         bCancel = findViewById(R.id.bCancel);
         bCancel.setVisibility(View.GONE);
 
+        iFoto.setEnabled(false);
 
-        inicializar();
 
         FirebaseDatabase.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+
+
+
+
+        inicializar();
     }
 
     private void inicializar() {
+
         firebaseAuth = FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
-                    if (firebaseUser.getPhotoUrl() != null) {
-                        Picasso.get().load(firebaseUser.getPhotoUrl()).into(iFoto);
-                    }
-                    databaseReference.child("usuarios").addValueEventListener(new ValueEventListener() {
+
+                    databaseReference.child("usuarios").child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()){
-                                for (DataSnapshot snapshot:dataSnapshot.getChildren()){
-                                    Usuarios usuarios = snapshot.getValue(Usuarios.class);
-                                    eUs.setText(usuarios.getCorreo());
-                                    ePas.setText(String.valueOf(usuarios.getSaldo()));
-                                    eTel.setText(usuarios.getTelefono());
-                                    eNam.setText(usuarios.getNombre());
-                                    Picasso.get().load(usuarios.getFoto()).into(iFoto);
+
+                                Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
+                                eUs.setText(usuario.getCorreo());
+                                ePas.setText(String.valueOf(usuario.getSaldo()));
+                                eTel.setText(usuario.getTelefono());
+                                eNam.setText(usuario.getNombre());
+
+                                switch (usuario.getFoto()){
+                                    case "0":
+                                        Picasso.get().load(firebaseUser.getPhotoUrl()).into(iFoto);
+                                        break;
+                                    case "1":
+                                        break;
+                                    default:
+                                        Picasso.get().load(usuario.getFoto()).into(iFoto);
+                                        break;
                                 }
                             }
-                            //listAdapter.notifyDataSetChanged();
-                            //usuarioAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -119,14 +136,6 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
 
                         }
                     });
-
-                   /* eUs.setText(firebaseUser.getEmail());
-                    ePas.setText("20000");
-                    eTel.setText(firebaseUser.getPhoneNumber());
-                    eNam.setText(firebaseUser.getDisplayName());
-                    if (firebaseUser.getPhotoUrl() != null) {
-                        Picasso.get().load(firebaseUser.getPhotoUrl()).into(iFoto);
-                    }*/
                 }
             }
         };
@@ -239,6 +248,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         eUs.setEnabled(true);
         eNam.setEnabled(true);
         eTel.setEnabled(true);
+        iFoto.setEnabled(true);
         bEdit.setVisibility(View.GONE);
         bCancel.setVisibility(View.VISIBLE);
         bSave.setVisibility(View.VISIBLE);
@@ -249,9 +259,11 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         eUs.setEnabled(false);
         eNam.setEnabled(false);
         eTel.setEnabled(false);
+        iFoto.setEnabled(false);
         bEdit.setVisibility(View.VISIBLE);
         bCancel.setVisibility(View.GONE);
         bSave.setVisibility(View.GONE);
+
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -259,32 +271,28 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         FirebaseDatabase.getInstance(); // para que actualice la informacion cuando se conecte a internet
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(); // parado en la base de datos
 
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = firebaseStorage.getReference();
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(); // comprimir foto
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
+        Map<String, Object> nombre = new HashMap<>();
+        nombre.put("nombre",eNam.getText().toString());
+        databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(nombre);
 
-        storageReference.child("Fotosusuarios").child(firebaseUser.getUid())
-                .putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                urlFoto = taskSnapshot.getDownloadUrl().toString();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("error", e.getMessage().toString());
-            }
-        });
+        Map<String, Object> tel = new HashMap<>();
+        tel.put("telefono",eTel.getText().toString());
+        databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(tel);
 
-        Usuarios usuarios = new Usuarios(firebaseUser.getUid(),
+        Map<String, Object> foto = new HashMap<>();
+        foto.put("foto",urlFoto);
+        databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(foto);
+
+        Map<String, Object> cor = new HashMap<>();
+        cor.put("correo",eUs.getText().toString());
+        databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(cor);
+
+       /* Usuarios usuarios = new Usuarios(
                 eNam.getText().toString(),
                 eTel.getText().toString(),
                 urlFoto,
-                eUs.getText().toString(),
-                10000);
+                eUs.getText().toString());
 
         databaseReference.child("usuarios").child(usuarios.getId()).setValue(usuarios).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -296,7 +304,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
                     Log.d("save", task.getException().toString());
                 }
             }
-        });
+        });*/
         Toast.makeText(Perfil.this, "almacenar", Toast.LENGTH_SHORT).show();
     }
 
@@ -324,6 +332,38 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
                 }catch (FileNotFoundException e){
                     e.printStackTrace();
                 }
+
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+                FirebaseDatabase.getInstance(); // para que actualice la informacion cuando se conecte a internet
+                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(); // parado en la base de datos
+
+                FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                StorageReference storageReference = firebaseStorage.getReference();
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(); // comprimir foto
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data1 = baos.toByteArray();
+
+                storageReference.child("Fotosusuarios").child(firebaseUser.getUid())
+                        .putBytes(data1).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        urlFoto = taskSnapshot.getDownloadUrl().toString();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("error", e.getMessage().toString());
+                    }
+                });
+
+                String fot = "1";
+                Map<String, Object> foto = new HashMap<>();
+                foto.put("foto",fot);
+                databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(foto);
+
             }
         }
     }
@@ -333,6 +373,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         eUs.setEnabled(false);
         eNam.setEnabled(false);
         eTel.setEnabled(false);
+        iFoto.setEnabled(false);
         bEdit.setVisibility(View.VISIBLE);
         bCancel.setVisibility(View.GONE);
         bSave.setVisibility(View.GONE);

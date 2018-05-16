@@ -228,7 +228,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                                     firebaseUser.getPhoneNumber(),
                                     "0",
                                     firebaseUser.getEmail(),
-                                    10000);
+                                    100000);
 
                             databaseReference.child("usuarios").child(usuarios.getId()).setValue(usuarios);
                         }

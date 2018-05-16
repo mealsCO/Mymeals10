@@ -71,7 +71,6 @@
                 android:scaleX="0.8"
                 android:scaleY="0.8"
                 android:transformPivotX="0dp"
-                android:layout_gravity="start"
                 android:stepSize="0.1"/>
 
         </LinearLayout>
