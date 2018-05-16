@@ -325,7 +325,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
 
                 try {
                     InputStream is = getContentResolver().openInputStream(imagen);
-                    BufferedInputStream bis = new BufferedInputStream(is);
+                    BufferedInputStream bis = new BufferedInputStream(is); 
                     bitmap = BitmapFactory.decodeStream(bis);
 
                     iFoto.setImageBitmap(bitmap);
