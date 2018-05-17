@@ -117,7 +117,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng meals = new LatLng(lat, lon);
         mMap.addMarker(new MarkerOptions().
                 position(meals).
-                title(rest).
+                title("UdeA").
+                snippet(rest).
                 icon(BitmapDescriptorFactory.fromResource(R.drawable.icomii)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meals, 16));
 

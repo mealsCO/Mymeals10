@@ -1,7 +1,12 @@
 package com.edopore.mymeals10.Adapters;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +53,7 @@ public class AdapterRestaurantes extends RecyclerView.Adapter<AdapterRestaurante
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(activity, "Abre actividad con detalle \n"+res, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, res, Toast.LENGTH_SHORT).show();
 
                         Intent i = new Intent(activity, MapsActivity.class);
                         i.putExtra("nombre",res);
