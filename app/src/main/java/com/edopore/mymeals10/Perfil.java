@@ -288,23 +288,6 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         cor.put("correo",eUs.getText().toString());
         databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(cor);
 
-       /* Usuarios usuarios = new Usuarios(
-                eNam.getText().toString(),
-                eTel.getText().toString(),
-                urlFoto,
-                eUs.getText().toString());
-
-        databaseReference.child("usuarios").child(usuarios.getId()).setValue(usuarios).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d("entre1", "ok");
-                } else {
-                    Log.d("entre2", "ok");
-                    Log.d("save", task.getException().toString());
-                }
-            }
-        });*/
         Toast.makeText(Perfil.this, "almacenar", Toast.LENGTH_SHORT).show();
     }
 

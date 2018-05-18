@@ -19,7 +19,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="RatingBar.Yellow" parent="Theme.AppCompat">
+    <style name="RatingBar.Yellow" parent="@android:style/Widget.RatingBar">
         <item name="colorControlNormal">@color/greenyellow</item>
         <item name="colorControlActivated">@color/greenyellow</item>
     </style>

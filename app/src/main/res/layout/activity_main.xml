@@ -7,6 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.edopore.mymeals10.MainActivity"
     android:orientation="vertical"
+    android:background="@drawable/colv"
     android:padding="1dp">
 
     <android.support.design.widget.AppBarLayout

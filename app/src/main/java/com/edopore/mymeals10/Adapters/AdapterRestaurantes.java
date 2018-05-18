@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,7 @@ public class AdapterRestaurantes extends RecyclerView.Adapter<AdapterRestaurante
     private ArrayList<Restaurantes> restaurantesList;
     private int resource;
     private Activity activity;
-    private String res;
-    private float la,lo;
+
 
 
     public AdapterRestaurantes(ArrayList<Restaurantes> restaurantesList, int resource, Activity activity) {
@@ -53,13 +53,7 @@ public class AdapterRestaurantes extends RecyclerView.Adapter<AdapterRestaurante
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(activity, res, Toast.LENGTH_SHORT).show();
-
-                        Intent i = new Intent(activity, MapsActivity.class);
-                        i.putExtra("nombre",res);
-                        i.putExtra("lat",la);
-                        i.putExtra("lon",lo);
-                        activity.startActivity(i);
+                //Toast.makeText(activity, res, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -69,11 +63,18 @@ public class AdapterRestaurantes extends RecyclerView.Adapter<AdapterRestaurante
     @Override
     public void onBindViewHolder(RestaurantesViewHolder holder, int position) {
 
-        Restaurantes restaurante = restaurantesList.get(position);
+        final Restaurantes restaurante = restaurantesList.get(position);
         holder.bindRestaurante(restaurante, activity);
-        res = restaurante.getNombre();
-        la = restaurante.getLatitud();
-        lo = restaurante.getLongitud();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(activity, MapsActivity.class);
+                i.putExtra("nombre",restaurante.getNombre());
+                i.putExtra("lat",restaurante.getLatitud());
+                i.putExtra("lon",restaurante.getLongitud());
+                activity.startActivity(i);
+            }
+        });
     }
 
     @Override

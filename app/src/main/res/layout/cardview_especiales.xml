@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.v7.widget.CardView
 
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,18 +9,18 @@
     app:cardCornerRadius="4dp"
     android:padding="3dp"
     android:layout_margin="4dp"
-    android:id="@+id/restaurantesCardView">
+    android:id="@+id/especialesCardView">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
-        android:padding="5dp">
+        android:padding="3dp">
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/iFoto"
-            android:layout_width="100dp"
+            android:id="@+id/iFot"
+            android:layout_width="150dp"
             android:layout_height="100dp"
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp"
@@ -36,32 +35,25 @@
             android:layout_gravity="center_vertical">
 
             <TextView
-                android:id="@+id/tNombre"
+                android:id="@+id/tPlato"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/restaurante"
+                android:text="@string/plato"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tDireccion"
+                android:id="@+id/tTiempo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/direccion"
+                android:text="@string/tiempo"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/tTelefono"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/telefono"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
 
             <RatingBar
-                android:id="@+id/rCalificacion"
+                android:id="@+id/rCalif"
                 android:theme="@style/RatingBar.Yellow"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"

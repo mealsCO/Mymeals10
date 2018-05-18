@@ -78,9 +78,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Picasso.get().load(restaurantes.getFoto()).into(iRes);
                     tDir.setText(restaurantes.getDireccion());
                     tTel.setText(restaurantes.getTelefono());
-                    //lat = restaurantes.getLatitud();
-                    //lon = restaurantes.getLongitud();
-                    //name = restaurantes.getNombre();
                 }
             }
 
