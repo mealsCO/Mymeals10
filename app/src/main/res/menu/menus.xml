@@ -14,7 +14,8 @@
 
     <item
         android:id="@+id/mShop"
-        android:title="@string/Carrito">
+        android:title="@string/Carrito"
+        android:icon="@drawable/shopping">
 
     </item>
 

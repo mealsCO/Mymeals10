@@ -155,7 +155,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 LoginManager.getInstance().logOut();
             }
         }
+        if (id == R.id.mShop){
+            goShopping();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goShopping(){
+        Intent intent = new Intent(MainActivity.this, CarritoActivity.class);
+        startActivity(intent);
     }
 
     private void goPerfil() {

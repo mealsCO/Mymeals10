@@ -2,18 +2,28 @@ package com.edopore.mymeals10.modelo;
 
 public class Especiales {
 
-    private String nombre, foto, tiempo, id;
+    private String restaurante, nombre, foto, tiempo, id, precio;
     private float calificacion;
 
-    public Especiales(String nombre, String foto, String tiempo, String id, float calificacion) {
+    public Especiales(String restaurante, String nombre, String foto, String tiempo, String id, String precio, float calificacion) {
+        this.restaurante = restaurante;
         this.nombre = nombre;
         this.foto = foto;
         this.tiempo = tiempo;
         this.id = id;
+        this.precio = precio;
         this.calificacion = calificacion;
     }
 
     public Especiales() {
+    }
+
+    public String getRestaurante() {
+        return restaurante;
+    }
+
+    public void setRestaurante(String restaurante) {
+        this.restaurante = restaurante;
     }
 
     public String getNombre() {
@@ -46,6 +56,14 @@ public class Especiales {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(String precio) {
+        this.precio = precio;
     }
 
     public float getCalificacion() {

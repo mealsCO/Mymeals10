@@ -1,27 +1,16 @@
 package com.edopore.mymeals10.Adapters;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.edopore.mymeals10.MapsActivity;
-import com.edopore.mymeals10.Perfil;
 import com.edopore.mymeals10.R;
-import com.edopore.mymeals10.Registro;
+import com.edopore.mymeals10.RestauranteActivity;
 import com.edopore.mymeals10.modelo.Restaurantes;
 import com.squareup.picasso.Picasso;
 
@@ -68,10 +57,11 @@ public class AdapterRestaurantes extends RecyclerView.Adapter<AdapterRestaurante
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(activity, MapsActivity.class);
+                Intent i = new Intent(activity, RestauranteActivity.class);
                 i.putExtra("nombre",restaurante.getNombre());
                 i.putExtra("lat",restaurante.getLatitud());
                 i.putExtra("lon",restaurante.getLongitud());
+                i.putExtra("llamada","restaurante");
                 activity.startActivity(i);
             }
         });

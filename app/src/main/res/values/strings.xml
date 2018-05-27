@@ -36,5 +36,10 @@
     <string name="title_activity_maps">Map</string>
     <string name="mapa">MAPA</string>
     <string name="plato">Plato</string>
-    <string name="tiempo">Tiempo de Cocción</string>
+    <string name="tiempo">Tiempo de Cocción: </string>
+    <string name="agregar">Agregar al Carrito</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu">MENÚ</string>
 </resources>

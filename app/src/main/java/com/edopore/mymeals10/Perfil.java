@@ -58,7 +58,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
     private DatabaseReference databaseReference;
 
     private Bitmap bitmap;
-    private String urlFoto;
+    private String urlFoto, fot="";
 
     EditText eUs, ePas, eNam, eTel;//ePas es para saldo, eUs es para correo
     Button bEdit, bSave, bCancel;
@@ -111,7 +111,6 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()){
-
                                 Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
                                 eUs.setText(usuario.getCorreo());
                                 ePas.setText(String.valueOf(usuario.getSaldo()));
@@ -255,15 +254,6 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
     }
 
     public void OnSaveClicked(View view) {
-        ePas.setEnabled(false);
-        eUs.setEnabled(false);
-        eNam.setEnabled(false);
-        eTel.setEnabled(false);
-        iFoto.setEnabled(false);
-        bEdit.setVisibility(View.VISIBLE);
-        bCancel.setVisibility(View.GONE);
-        bSave.setVisibility(View.GONE);
-
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -271,24 +261,42 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         FirebaseDatabase.getInstance(); // para que actualice la informacion cuando se conecte a internet
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(); // parado en la base de datos
 
+        if (eNam.getText().toString().isEmpty()){
+            Toast.makeText(Perfil.this, "Ingrese un nombre Valido", Toast.LENGTH_SHORT).show();
+        }else if (eUs.getText().toString().isEmpty()){
+            Toast.makeText(Perfil.this, "Ingrese un correo Valido", Toast.LENGTH_SHORT).show();
+        }else if (eTel.getText().toString().isEmpty()){
+            Toast.makeText(Perfil.this, "Ingrese un telefono Valido", Toast.LENGTH_SHORT).show();
+        }else {
+            Map<String, Object> nombre = new HashMap<>();
+            nombre.put("nombre", eNam.getText().toString());
+            databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(nombre);
 
-        Map<String, Object> nombre = new HashMap<>();
-        nombre.put("nombre",eNam.getText().toString());
-        databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(nombre);
+            Map<String, Object> tel = new HashMap<>();
+            tel.put("telefono", eTel.getText().toString());
+            databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(tel);
 
-        Map<String, Object> tel = new HashMap<>();
-        tel.put("telefono",eTel.getText().toString());
-        databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(tel);
+            Map<String, Object> cor = new HashMap<>();
+            cor.put("correo", eUs.getText().toString());
+            databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(cor);
 
-        Map<String, Object> foto = new HashMap<>();
-        foto.put("foto",urlFoto);
-        databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(foto);
+            ePas.setEnabled(false);
+            eUs.setEnabled(false);
+            eNam.setEnabled(false);
+            eTel.setEnabled(false);
+            iFoto.setEnabled(false);
+            bEdit.setVisibility(View.VISIBLE);
+            bCancel.setVisibility(View.GONE);
+            bSave.setVisibility(View.GONE);
 
-        Map<String, Object> cor = new HashMap<>();
-        cor.put("correo",eUs.getText().toString());
-        databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(cor);
-
-        Toast.makeText(Perfil.this, "almacenar", Toast.LENGTH_SHORT).show();
+            if (fot == "1") {
+                fot = "";
+                Map<String, Object> foto = new HashMap<>();
+                foto.put("foto", urlFoto);
+                databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(foto);
+            }
+            Toast.makeText(Perfil.this, "almacenar", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void fotoClicked(View view){
@@ -342,7 +350,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
                     }
                 });
 
-                String fot = "1";
+                fot = "1";
                 Map<String, Object> foto = new HashMap<>();
                 foto.put("foto",fot);
                 databaseReference.child("usuarios").child(firebaseUser.getUid()).updateChildren(foto);
@@ -352,6 +360,42 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
     }
 
     public void OnCancelClicked(View view) {
+
+        FirebaseDatabase.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        databaseReference.child("usuarios").child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
+                    eUs.setText(usuario.getCorreo());
+                    ePas.setText(String.valueOf(usuario.getSaldo()));
+                    eTel.setText(usuario.getTelefono());
+                    eNam.setText(usuario.getNombre());
+
+                    switch (usuario.getFoto()){
+                        case "0":
+                            Picasso.get().load(firebaseUser.getPhotoUrl()).into(iFoto);
+                            break;
+                        case "1":
+                            break;
+                        default:
+                            Picasso.get().load(usuario.getFoto()).into(iFoto);
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         ePas.setEnabled(false);
         eUs.setEnabled(false);
         eNam.setEnabled(false);
@@ -360,5 +404,7 @@ public class Perfil extends AppCompatActivity implements GoogleApiClient.OnConne
         bEdit.setVisibility(View.VISIBLE);
         bCancel.setVisibility(View.GONE);
         bSave.setVisibility(View.GONE);
+
+
     }
 }
